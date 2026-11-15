@@ -1,0 +1,8 @@
+[
+  {
+    "name": "daily-renewal-email-reminders",
+    "cron": "0 8 * * *",
+    "handler": "renewalEmailCron",
+    "timezone": "Africa/Lagos"
+  }
+]

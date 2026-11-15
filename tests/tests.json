@@ -1,0 +1,177 @@
+[
+  {
+    "name": "First payment applies the plan waiting period",
+    "sanity": true,
+    "viewport": "desktop",
+    "covers": [
+      "monthly seven day initial waiting period",
+      "quarterly 48 hour initial waiting period",
+      "annual 48 hour initial waiting period",
+      "payment confirmation starts waiting period"
+    ],
+    "description": "Checks that confirmed first payments calculate the correct plan based waiting period and coverage start date.",
+    "steps": [
+      "Sign in as Super Admin and open a pending member payment",
+      "Mark a monthly payment as Paid and inspect the member access dates",
+      "Repeat with quarterly and annual member payments"
+    ],
+    "expected": "Monthly membership starts access seven days after confirmed payment. Quarterly and annual memberships start access 48 hours after confirmed payment."
+  },
+  {
+    "name": "Renewal timing controls continuity or a new waiting period",
+    "viewport": "desktop",
+    "covers": [
+      "renewal within 72 hour grace period",
+      "late renewal after 72 hours",
+      "six day late renewal waiting period",
+      "coverage expiry recalculation"
+    ],
+    "description": "Checks that on time renewals preserve continuous cover while late renewals trigger the six day waiting period.",
+    "steps": [
+      "Open a member whose coverage expires in the future and mark the renewal Paid",
+      "Confirm the next coverage period begins at the previous expiry date",
+      "Open a member whose coverage expired more than 72 hours ago and mark the renewal Paid",
+      "Review the new waiting period and coverage dates"
+    ],
+    "expected": "Renewal within 72 hours after expiry does not add a new wait. Renewal after 72 hours starts a six day wait from payment confirmation, then the new coverage period begins."
+  },
+  {
+    "name": "Member access is blocked until the calculated start date",
+    "viewport": "mobile",
+    "covers": [
+      "server side waiting period access gate",
+      "member dashboard waiting status",
+      "care request blocked during waiting period"
+    ],
+    "description": "Checks that a member cannot use care access during a waiting period even when payment is confirmed.",
+    "steps": [
+      "Sign in as a member with a confirmed payment but a future coverage start date",
+      "Review the digital access card and membership status",
+      "Try to request a benefit eligibility check"
+    ],
+    "expected": "The member sees that the waiting period is still active and the server blocks eligibility access until the coverage start date."
+  },
+  {
+    "name": "Existing approvals remain subject to renewal and access controls",
+    "viewport": "desktop",
+    "covers": [
+      "human approval requirement",
+      "existing access approval retained",
+      "expired membership access restriction"
+    ],
+    "description": "Checks that waiting period rules do not automatically approve care or bypass expired membership restrictions.",
+    "steps": [
+      "Open a member with approved provider assignment and expired coverage",
+      "Attempt an eligibility check before a qualifying renewal payment",
+      "Review the result and member access status"
+    ],
+    "expected": "The member cannot access care based only on historical approval. Payment and calculated coverage dates are checked, and human approval remains required."
+  },
+  {
+    "name": "Referral rewards, wallet points and member dashboard persist",
+    "viewport": "mobile",
+    "covers": [
+      "unique referral code per member",
+      "2.5 percent referral commission on confirmed payments",
+      "1 percent wallet funding points",
+      "one point converts to one naira",
+      "wallet funding awaits payment confirmation",
+      "member dashboard and wallet reload after sign out and sign in",
+      "member wallet privacy boundary"
+    ],
+    "description": "Checks that a member can share a unique code, receive confirmed rewards, convert points and see the same saved account after signing in again.",
+    "steps": [
+      "Sign in as Member A and copy the personal referral code",
+      "Register Member B using Member A's code and confirm Member B receives a different code",
+      "Record a confirmed payment for Member B and check Member A's wallet receives 2.5 percent",
+      "Request wallet funding for Member A, confirm it as Super Admin, and check 1 percent is added as points",
+      "Convert points and verify one point becomes one naira in wallet balance",
+      "Sign out and sign in again as Member A"
+    ],
+    "expected": "Each member has a unique referral code. Confirmed referred payments credit 2.5 percent to the referrer. Confirmed wallet funding adds 1 percent as points. Points convert at 1 point to ₦1. The member returns to the same personal dashboard, referral code, wallet balance, points and transaction history."
+  },
+  {
+    "name": "Team roles enforce dashboard and customer data permissions",
+    "viewport": "desktop",
+    "covers": [
+      "Super Admin can add admin staff and customer service roles",
+      "role specific dashboard navigation",
+      "all team roles can register customers",
+      "non Super Admin cannot read NIN or date of birth",
+      "only Super Admin can delete customers or change sensitive details"
+    ],
+    "description": "Checks that team roles receive only their permitted workspace and customer data actions.",
+    "steps": [
+      "Sign in as Super Admin and add one Administrator, one Staff member and one Customer Service user",
+      "Sign in as each team role and confirm the dashboard sections match its permissions",
+      "Register a customer as each role",
+      "Attempt to change a customer's email, phone, NIN and date of birth as a non Super Admin",
+      "Attempt to delete a customer as a non Super Admin"
+    ],
+    "expected": "Each role sees its assigned dashboard and can register customers. Non Super Admin roles cannot view NIN or date of birth, change sensitive customer information or delete customer records."
+  },
+  {
+    "name": "Emergency guidance and health chat protect users and support clinic search",
+    "viewport": "mobile",
+    "covers": [
+      "public emergency guidance for members and nonmembers",
+      "red flag symptom escalation without plan purchase delay",
+      "conversational Nigerian English health information",
+      "nonmember plan purchase link",
+      "member location based nearby clinic search",
+      "no invented in network clinic or guaranteed coverage claims"
+    ],
+    "description": "Checks that the public health assistant gives safe emergency guidance, supports a natural health conversation and directs users to appropriate plan or location resources.",
+    "steps": [
+      "Open the public TrustlineCover landing page and find Emergency Speak to a Doctor",
+      "Ask about a severe symptom such as chest pain and review the emergency guidance",
+      "Confirm the emergency guidance does not require plan purchase before seeking treatment",
+      "Use the assistant as a visitor without an active plan and review the plan link",
+      "Select active plan, enter a neighbourhood and review the nearby clinic search link"
+    ],
+    "expected": "Potential emergencies are directed to urgent care without delay or a purchase condition. Nonmembers can view plans. Users reporting an active plan can search nearby clinics by location, while the app does not claim a search result is in network or guaranteed to be covered."
+  },
+  {
+    "name": "Members request contact changes for Super Admin approval",
+    "viewport": "mobile",
+    "covers": [
+      "member email and phone are not directly editable",
+      "member submits email or phone change request",
+      "Super Admin approves or rejects contact change",
+      "member retains access using original sign in identity after contact email update"
+    ],
+    "description": "Verifies that members submit contact changes for review and only the Super Admin can approve them.",
+    "steps": [
+      "Sign in as a member and open the account details section",
+      "Submit a request to change the registered phone number or email address",
+      "Sign in as Super Admin and review the pending request",
+      "Approve the request and return to the member dashboard"
+    ],
+    "expected": "The member cannot directly change registered contact details. The request is recorded for Super Admin review, and approved contact details update while the member's original sign in identity remains usable."
+  },
+  {
+    "name": "Email centre permissions and subscription renewal notices",
+    "viewport": "desktop",
+    "covers": [
+      "Super Admin only SMTP settings in Website settings",
+      "SMTP credentials encrypted and never returned to the frontend",
+      "Admin and Staff can send member emails",
+      "Customer Service cannot send member emails",
+      "email history records SMTP accepted and failed messages",
+      "reminder queue created from subscription coverage expiry dates",
+      "existing member dates backfilled in bounded batches",
+      "duplicate reminder events prevented"
+    ],
+    "description": "Verifies SMTP settings access, team email sending and scheduled renewal messages.",
+    "steps": [
+      "Sign in as Super Admin and open Website settings",
+      "Save SMTP host, port, username, password and sender details",
+      "Send a test email and confirm the password is not displayed",
+      "Sign in as Admin and Staff and send an email to selected members",
+      "Confirm Customer Service cannot access the Email Centre",
+      "Review the email history for SMTP accepted and failed messages",
+      "Confirm paid subscription expiry dates create reminders for 7 days, 3 days, 1 day and expiry day"
+    ],
+    "expected": "Only Super Admin can configure SMTP. Admin and Staff can send separate emails to selected members. SMTP credentials are encrypted and never returned to the browser. Existing subscriptions are backfilled and paid subscriptions create deduplicated reminder records for 7 days, 3 days, 1 day and expiry day. The daily schedule runs at 8am Nigeria time."
+  }
+]
